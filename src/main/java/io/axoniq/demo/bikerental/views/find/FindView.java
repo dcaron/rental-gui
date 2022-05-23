@@ -65,7 +65,7 @@ public class FindView extends VerticalLayout {
             String reference = rentalClient.requestBike(bikeStatus.getBikeId());
             Notification.show("Response: " + reference);
 
-            ok.getUI().ifPresent(ui -> ui.navigate("payment"));
+//            ok.getUI().ifPresent(ui -> ui.navigate("payment"));
             ok.getUI().ifPresent(ui -> ui.navigate("payment", QueryParameters.simple(Map.of("reference", reference))));
         });
 
