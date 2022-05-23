@@ -52,6 +52,23 @@ public class RentalClient {
     }
 
     //GET {{hostname}}/findPayment?reference=95496b07-1e9f-4639-8ff3-29b1c58cd89a
+    public String findPayment(String reference) {
+        return restTemplate.getForObject("/findPayment?reference={reference}", String.class,Map.of("reference",reference));
+    }
+
+    // POST {{hostname}}/acceptPayment?id=7c38518b-3c4e-4b4b-9172-c4bef65ff3b0
+    public String acceptPayment(String id) {
+
+        Map<String, String> params = Map.of("id",id);
+        return restTemplate.postForObject("acceptPayment?id={id}",params,String.class,params);
+    }
+
+    // POST {{hostname}}/returnBike?bikeId=8e648607-6294-44aa-a71a-b7a2b0dae6e2
+    public String returnBike(String bikeId) {
+
+        Map<String, String> params = Map.of("bikeId",bikeId);
+        return restTemplate.postForObject("returnBike?bikeId={bikeId}",params,String.class,params);
+    }
 
     public static <T> T get(Class<T> serviceType)
     {

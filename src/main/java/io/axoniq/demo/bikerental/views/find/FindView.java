@@ -3,7 +3,7 @@ package io.axoniq.demo.bikerental.views.find;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.notification.Notification;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.QueryParameters;
@@ -11,13 +11,10 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteAlias;
 import io.axoniq.demo.bikerental.RentalClient;
 import io.axoniq.demo.bikerental.coreapi.rental.BikeStatus;
+import io.axoniq.demo.bikerental.coreapi.rental.RentalStatus;
 import io.axoniq.demo.bikerental.views.MainLayout;
-import io.axoniq.demo.bikerental.views.payment.PaymentView;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -32,10 +29,10 @@ public class FindView extends VerticalLayout {
     private ComboBox<String> bike;
 
     public FindView() {
-        BikeStatus[] bikes = rentalClient.getBikes();
+        BikeStatus[] availableBikes = Arrays.stream(rentalClient.getBikes()).filter(c -> c.getStatus().equals(RentalStatus.AVAILABLE)).toArray(BikeStatus[]::new);
 
         // get set of unique locations
-        Set<String> locationChoices = Stream.of(bikes).map(x -> x.getLocation()).collect(Collectors.toSet());
+        Set<String> locationChoices = Stream.of(availableBikes).map(x -> x.getLocation()).collect(Collectors.toSet());
 
         System.out.println("Nr of locations: " + locationChoices.size());
         location = new ComboBox<>("Pickup location", locationChoices);
@@ -47,7 +44,7 @@ public class FindView extends VerticalLayout {
         ok.setEnabled(false);
 
         location.addValueChangeListener(e -> {
-            List<String> bikeChoices = Stream.of(bikes).filter(c -> c.getLocation().equals(location.getValue())).map(x -> x.getBikeId()).collect(Collectors.toList());
+            List<String> bikeChoices = Stream.of(availableBikes).filter(c -> c.getLocation().equals(location.getValue())).map(x -> x.getBikeId()).collect(Collectors.toList());
             System.out.println("Nr of bikes: " + bikeChoices.size());
 
             bike.setItems(bikeChoices);
@@ -62,15 +59,22 @@ public class FindView extends VerticalLayout {
 
             BikeStatus bikeStatus = rentalClient.getBike( bike.getValue());
             Notification.show("Bike selected: " + bikeStatus);
-            String reference = rentalClient.requestBike(bikeStatus.getBikeId());
-            Notification.show("Response: " + reference);
+            String reference = null;
+            try {
+                reference = rentalClient.requestBike(bikeStatus.getBikeId());
+                Notification notification = Notification.show("Response: " + reference);
+                notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+                String finalReference = reference;
+                ok.getUI().ifPresent(ui -> ui.navigate("payment", QueryParameters.simple(Map.of("reference", finalReference))));
 
-//            ok.getUI().ifPresent(ui -> ui.navigate("payment"));
-            ok.getUI().ifPresent(ui -> ui.navigate("payment", QueryParameters.simple(Map.of("reference", reference))));
+            } catch (Exception ex) {
+                Notification notification = Notification.show("Response: " + reference);
+                notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+                ex.printStackTrace();
+            }
         });
 
         setMargin(true);
-        //setVerticalComponentAlignment(Alignment.END, location, ok);
 
         add(location, bike, ok);
     }

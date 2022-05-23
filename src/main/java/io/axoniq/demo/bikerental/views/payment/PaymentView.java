@@ -2,6 +2,7 @@ package io.axoniq.demo.bikerental.views.payment;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.*;
@@ -13,7 +14,7 @@ import java.util.Map;
 
 @PageTitle("Payment")
 @Route(value = "payment", layout = MainLayout.class)
-public class PaymentView extends HorizontalLayout implements BeforeEnterObserver{
+public class PaymentView extends HorizontalLayout implements BeforeEnterObserver {
     private RentalClient rentalClient = RentalClient.get(RentalClient.class);
 
     //private TextField name;
@@ -21,20 +22,31 @@ public class PaymentView extends HorizontalLayout implements BeforeEnterObserver
     private Map<String, List<String>> parametersMap;
 
     public PaymentView() {
-        //name = new TextField("Your name");
-        // GET {{hostname}}/findPayment?reference=95496b07-1e9f-4639-8ff3-29b1c58cd89a
+        // name = new TextField("Your name");
         pay = new Button("Pay");
         pay.addClickListener(e -> {
-            List<String> reference = parametersMap.getOrDefault("reference", List.of("bleble"));
-            System.out.println(""+ reference);
-            Notification.show("Hello " + reference);
+
+
+            String reference = null;
+            try {
+                reference = parametersMap.get("reference").get(0);
+                String payment = rentalClient.acceptPayment(reference);
+                Notification notification = Notification.show("Payment accepted " + reference);
+                notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+            } catch (Exception ex) {
+                Notification notification = Notification.show("Payment refused " + reference);
+                notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+                ex.printStackTrace();
+            }
+
+            System.out.println("Payment accepted: "+ reference);
+            pay.getUI().ifPresent(ui -> ui.navigate("return"));
         });
 
         setMargin(true);
         setVerticalComponentAlignment(Alignment.END, pay);
 
         add(pay);
-
     }
 
     @Override
@@ -42,7 +54,6 @@ public class PaymentView extends HorizontalLayout implements BeforeEnterObserver
         Location location = beforeEnterEvent.getLocation();
         QueryParameters queryParameters = location.getQueryParameters();
 
-        parametersMap = queryParameters
-                .getParameters();
+        parametersMap = queryParameters.getParameters();
     }
 }
