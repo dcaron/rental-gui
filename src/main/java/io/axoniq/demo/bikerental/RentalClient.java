@@ -51,6 +51,8 @@ public class RentalClient {
         return restTemplate.postForObject("requestBike?bikeId={bikeId}",params,String.class,params);
     }
 
+    //GET {{hostname}}/findPayment?reference=95496b07-1e9f-4639-8ff3-29b1c58cd89a
+
     public static <T> T get(Class<T> serviceType)
     {
         return WebApplicationContextUtils

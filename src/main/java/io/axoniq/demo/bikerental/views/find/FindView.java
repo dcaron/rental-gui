@@ -6,14 +6,17 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
+import com.vaadin.flow.router.QueryParameters;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteAlias;
 import io.axoniq.demo.bikerental.RentalClient;
 import io.axoniq.demo.bikerental.coreapi.rental.BikeStatus;
 import io.axoniq.demo.bikerental.views.MainLayout;
+import io.axoniq.demo.bikerental.views.payment.PaymentView;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -59,11 +62,11 @@ public class FindView extends VerticalLayout {
 
             BikeStatus bikeStatus = rentalClient.getBike( bike.getValue());
             Notification.show("Bike selected: " + bikeStatus);
-            String response = rentalClient.requestBike(bikeStatus.getBikeId());
-            Notification.show("Response: " + response);
+            String reference = rentalClient.requestBike(bikeStatus.getBikeId());
+            Notification.show("Response: " + reference);
 
-            ok.getUI().ifPresent(ui ->
-                    ui.navigate("payment"));
+            ok.getUI().ifPresent(ui -> ui.navigate("payment"));
+            ok.getUI().ifPresent(ui -> ui.navigate("payment", QueryParameters.simple(Map.of("reference", reference))));
         });
 
         setMargin(true);
