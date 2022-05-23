@@ -30,6 +30,7 @@ public class PaymentView extends HorizontalLayout implements BeforeEnterObserver
             String reference = null;
             try {
                 reference = parametersMap.get("reference").get(0);
+                System.out.println("paying: "+ reference);
                 String payment = rentalClient.acceptPayment(reference);
                 Notification notification = Notification.show("Payment accepted " + reference);
                 notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
