@@ -12,20 +12,20 @@ import io.axoniq.demo.bikerental.views.MainLayout;
 @Route(value = "payment", layout = MainLayout.class)
 public class PaymentView extends HorizontalLayout {
 
-    private TextField name;
-    private Button sayHello;
+    //private TextField name;
+    private Button pay;
 
     public PaymentView() {
-        name = new TextField("Your name");
-        sayHello = new Button("Say hello");
-        sayHello.addClickListener(e -> {
-            Notification.show("Hello " + name.getValue());
+        //name = new TextField("Your name");
+        pay = new Button("Pay");
+        pay.addClickListener(e -> {
+            //Notification.show("Hello " + name.getValue());
         });
 
         setMargin(true);
-        setVerticalComponentAlignment(Alignment.END, name, sayHello);
+        setVerticalComponentAlignment(Alignment.END, pay);
 
-        add(name, sayHello);
+        add(pay);
     }
 
 }

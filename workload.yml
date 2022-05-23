@@ -1,10 +1,10 @@
 apiVersion: carto.run/v1alpha1
 kind: Workload
 metadata:
-  name: bike-gui
+  name: rental-gui
   labels:
     apps.tanzu.vmware.com/workload-type: web
-    app.kubernetes.io/part-of: bike-gui
+    app.kubernetes.io/part-of: rental-gui
 spec:
   params:
     - name: annotations
@@ -12,6 +12,6 @@ spec:
         autoscaling.knative.dev/minScale: "1"
   source:
     git:
-      url: https://github.com/dcaron/bike-gui
+      url: https://github.com/dcaron/rental-gui
       ref:
         branch: main
