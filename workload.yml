@@ -6,6 +6,13 @@ metadata:
     apps.tanzu.vmware.com/workload-type: web
     app.kubernetes.io/part-of: rental-gui
 spec:
+  build:
+    env:
+      - # EnvVar represents an environment variable present in a
+        # Container.
+        # +optional
+        name: BP_MAVEN_BUILD_ARGUMENTS
+        value: "-Dmaven.test.skip=true --no-transfer-progress clean package -Pproduction"
   params:
     - name: annotations
       value:
