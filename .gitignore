@@ -21,6 +21,6 @@ error-screenshots/
 webpack.generated.js
 /webpack.config.js
 /package.json
-/package-lock.json
+#/package-lock.json
 /tsconfig.json
 /types.d.ts
