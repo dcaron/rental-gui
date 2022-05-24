@@ -94,6 +94,7 @@ public class MainLayout extends AppLayout {
         }
 
         header.add(layout, nav);
+        nav.setVisible(false);
         return header;
     }
 
@@ -105,7 +106,7 @@ public class MainLayout extends AppLayout {
 
                 new MenuItemInfo("Return", "la la-globe", ReturnView.class), //
 
-                new MenuItemInfo("About", "la la-file", AboutView.class), //
+                // new MenuItemInfo("About", "la la-file", AboutView.class), //
 
         };
     }
