@@ -12,6 +12,7 @@ import com.vaadin.flow.component.html.Nav;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.html.UnorderedList;
 import com.vaadin.flow.router.RouterLink;
+import io.axoniq.demo.bikerental.RentalClient;
 import io.axoniq.demo.bikerental.views.about.AboutView;
 import io.axoniq.demo.bikerental.views.find.FindView;
 import io.axoniq.demo.bikerental.views.payment.PaymentView;
@@ -62,7 +63,6 @@ public class MainLayout extends AppLayout {
                 }
             }
         }
-
     }
 
     public MainLayout() {
@@ -76,9 +76,15 @@ public class MainLayout extends AppLayout {
         Div layout = new Div();
         layout.addClassNames("flex", "h-xl", "items-center", "px-l");
 
-        H1 appName = new H1("AD Bike Rental");
+        H1 appName = new H1("AD Bike Rental ");
         appName.addClassNames("my-0", "me-auto", "text-l");
         layout.add(appName);
+
+        RentalClient rentalClient = RentalClient.get(RentalClient.class);
+        Span baseUrl = new Span(rentalClient.getBaseUrl());
+        // Use Lumo classnames for various styling
+        baseUrl.addClassNames("font-medium", "text-s", "whitespace-nowrap");
+        layout.add(baseUrl);
 
         Nav nav = new Nav();
         nav.addClassNames("flex", "gap-s", "overflow-auto", "px-m");

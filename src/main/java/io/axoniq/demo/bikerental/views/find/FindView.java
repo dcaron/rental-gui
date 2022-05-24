@@ -9,7 +9,6 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.QueryParameters;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteAlias;
-import com.vaadin.flow.server.VaadinSession;
 import io.axoniq.demo.bikerental.RentalClient;
 import io.axoniq.demo.bikerental.coreapi.rental.BikeStatus;
 import io.axoniq.demo.bikerental.coreapi.rental.RentalStatus;
@@ -30,8 +29,6 @@ public class FindView extends VerticalLayout {
     private Button ok;
 
     public FindView() {
-        VaadinSession vaadinSession = VaadinSession.getCurrent();
-        vaadinSession.getSession().getId();
         BikeStatus[] availableBikes = Arrays.stream(rentalClient.getBikes()).filter(c -> c.getStatus().equals(RentalStatus.AVAILABLE)).toArray(BikeStatus[]::new);
 
         // get set of unique locations

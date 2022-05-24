@@ -1,14 +1,10 @@
 package io.axoniq.demo.bikerental;
 
 import com.vaadin.flow.server.VaadinServlet;
-import com.vaadin.flow.spring.annotation.SpringComponent;
-import com.vaadin.flow.spring.annotation.UIScope;
-import com.vaadin.flow.spring.annotation.VaadinSessionScope;
 import io.axoniq.demo.bikerental.coreapi.rental.BikeStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -25,12 +21,18 @@ import java.util.Map;
 public class RentalClient {
     private final RestTemplate restTemplate;
 
+    private String baseUrl;
     @Autowired
     public RentalClient(RestTemplateBuilder restTemplateBuilder, @Value("${rentalservice.baseurl}") String baseUrl) {
+        this.baseUrl=baseUrl;
         System.out.println("creating client for" + baseUrl);
         DefaultUriBuilderFactory uriBuilderFactory = new DefaultUriBuilderFactory(baseUrl);
         this.restTemplate = restTemplateBuilder.build();
         restTemplate.setUriTemplateHandler(uriBuilderFactory);
+    }
+
+    public String getBaseUrl() {
+        return baseUrl;
     }
 
     public BikeStatus[] getBikes() {
