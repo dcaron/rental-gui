@@ -17,7 +17,7 @@ public class ReturnView extends HorizontalLayout implements BeforeEnterObserver 
     private QueryParameters queryParameters;
 
     public ReturnView() {
-
+        System.out.println(queryParameters.getParameters());
         String bikeId = queryParameters.getParameters().get("bikeId").get(0);
 
         returnButton = new Button("Return bike " + bikeId);
