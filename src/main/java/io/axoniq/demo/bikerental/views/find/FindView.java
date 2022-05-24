@@ -62,7 +62,7 @@ public class FindView extends VerticalLayout {
 //        });
         ok.addClickListener(e -> {
             String bikeId=bikeChoices.get(ThreadLocalRandom.current().nextInt(bikeChoices.size()));
-            BikeStatus bikeStatus = rentalClient.getBike( bike.getValue());
+            BikeStatus bikeStatus = rentalClient.getBike(bikeId);
             Notification.show("Bike selected: " + bikeStatus);
             String reference = null;
             try {
