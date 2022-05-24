@@ -19,29 +19,35 @@ public class PaymentView extends HorizontalLayout implements BeforeEnterObserver
 
     //private TextField name;
     private Button pay;
-    private Map<String, List<String>> parametersMap;
+    private QueryParameters queryParameters;
+
 
     public PaymentView() {
         // name = new TextField("Your name");
         pay = new Button("Pay");
+
         pay.addClickListener(e -> {
 
 
             String reference = null;
             try {
-                reference = parametersMap.get("reference").get(0);
+                reference = queryParameters.getParameters().get("reference").get(0);
                 System.out.println("paying: "+ reference);
-                String payment = rentalClient.acceptPayment(reference);
+
+                String paymentId = rentalClient.findPayment(reference);
+
+                if(paymentId == null) throw new RuntimeException("unable to find payment");
+
+                rentalClient.acceptPayment(paymentId);
                 Notification notification = Notification.show("Payment accepted " + reference);
                 notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
             } catch (Exception ex) {
-                Notification notification = Notification.show("Payment refused " + reference);
+                Notification notification = Notification.show("Payment failed " + reference);
                 notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
                 ex.printStackTrace();
             }
-
             System.out.println("Payment accepted: "+ reference);
-            pay.getUI().ifPresent(ui -> ui.navigate("return"));
+            pay.getUI().ifPresent(ui -> ui.navigate("return",queryParameters));
         });
 
         setMargin(true);
@@ -53,8 +59,6 @@ public class PaymentView extends HorizontalLayout implements BeforeEnterObserver
     @Override
     public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
         Location location = beforeEnterEvent.getLocation();
-        QueryParameters queryParameters = location.getQueryParameters();
-
-        parametersMap = queryParameters.getParameters();
+        queryParameters = location.getQueryParameters();
     }
 }

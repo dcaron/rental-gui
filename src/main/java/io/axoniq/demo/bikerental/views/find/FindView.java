@@ -9,6 +9,7 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.QueryParameters;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteAlias;
+import com.vaadin.flow.server.VaadinSession;
 import io.axoniq.demo.bikerental.RentalClient;
 import io.axoniq.demo.bikerental.coreapi.rental.BikeStatus;
 import io.axoniq.demo.bikerental.coreapi.rental.RentalStatus;
@@ -29,6 +30,8 @@ public class FindView extends VerticalLayout {
     private ComboBox<String> bike;
 
     public FindView() {
+        VaadinSession vaadinSession = VaadinSession.getCurrent();
+        vaadinSession.getSession().getId();
         BikeStatus[] availableBikes = Arrays.stream(rentalClient.getBikes()).filter(c -> c.getStatus().equals(RentalStatus.AVAILABLE)).toArray(BikeStatus[]::new);
 
         // get set of unique locations
@@ -65,7 +68,7 @@ public class FindView extends VerticalLayout {
                 Notification notification = Notification.show("Response: " + reference);
                 notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
                 String finalReference = reference;
-                ok.getUI().ifPresent(ui -> ui.navigate("payment", QueryParameters.simple(Map.of("reference", finalReference))));
+                ok.getUI().ifPresent(ui -> ui.navigate("payment", QueryParameters.simple(Map.of("reference", finalReference,"bikeId",bikeStatus.getBikeId()))));
 
             } catch (Exception ex) {
                 Notification notification = Notification.show("Response: " + reference);
