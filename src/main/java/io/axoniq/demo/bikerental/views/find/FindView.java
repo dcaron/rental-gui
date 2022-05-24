@@ -81,7 +81,7 @@ public class FindView extends VerticalLayout {
 
         setMargin(true);
 
-        add(location, bike, ok);
+        add(location, ok);
     }
 
 }
