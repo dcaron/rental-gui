@@ -16,6 +16,7 @@ import io.axoniq.demo.bikerental.coreapi.rental.RentalStatus;
 import io.axoniq.demo.bikerental.views.MainLayout;
 
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -40,26 +41,27 @@ public class FindView extends VerticalLayout {
         System.out.println("Nr of locations: " + locationChoices.size());
         location = new ComboBox<>("Pickup location", locationChoices);
 
-        bike = new ComboBox<String>("Bike", Collections.<String>emptyList());
+        // bike = new ComboBox<String>("Bike", Collections.<String>emptyList());
         // bike.setVisible(false);
 
         ok = new Button("Select bike");
         ok.setEnabled(false);
-
+        List<String> bikeChoices = new ArrayList<>();
         location.addValueChangeListener(e -> {
-            List<String> bikeChoices = Stream.of(availableBikes).filter(c -> c.getLocation().equals(location.getValue())).map(x -> x.getBikeId()).collect(Collectors.toList());
+            bikeChoices.clear();
+            bikeChoices.addAll(Stream.of(availableBikes).filter(c -> c.getLocation().equals(location.getValue())).map(x -> x.getBikeId()).collect(Collectors.toList()));
             System.out.println("Nr of bikes: " + bikeChoices.size());
 
-            bike.setItems(bikeChoices);
+            // bike.setItems(bikeChoices);
             // bike.setVisible(true);
-           // ok.setEnabled(true);
+           ok.setEnabled(true);
         });
-        bike.addValueChangeListener(e -> {
-            ok.setEnabled(true);
-            System.out.println("Bike selected: " + bike.getValue());
-        });
+//        bike.addValueChangeListener(e -> {
+//            ok.setEnabled(true);
+//            //System.out.println("Bike selected: " + bike.getValue());
+//        });
         ok.addClickListener(e -> {
-
+            String bikeId=bikeChoices.get(ThreadLocalRandom.current().nextInt(bikeChoices.size()));
             BikeStatus bikeStatus = rentalClient.getBike( bike.getValue());
             Notification.show("Bike selected: " + bikeStatus);
             String reference = null;
