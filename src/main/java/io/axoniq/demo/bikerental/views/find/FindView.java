@@ -28,7 +28,6 @@ public class FindView extends VerticalLayout {
 
     private ComboBox<String> location;
     private Button ok;
-    private ComboBox<String> bike;
 
     public FindView() {
         VaadinSession vaadinSession = VaadinSession.getCurrent();
@@ -41,8 +40,6 @@ public class FindView extends VerticalLayout {
         System.out.println("Nr of locations: " + locationChoices.size());
         location = new ComboBox<>("Pickup location", locationChoices);
 
-        // bike = new ComboBox<String>("Bike", Collections.<String>emptyList());
-        // bike.setVisible(false);
 
         ok = new Button("Select bike");
         ok.setEnabled(false);
@@ -52,14 +49,9 @@ public class FindView extends VerticalLayout {
             bikeChoices.addAll(Stream.of(availableBikes).filter(c -> c.getLocation().equals(location.getValue())).map(x -> x.getBikeId()).collect(Collectors.toList()));
             System.out.println("Nr of bikes: " + bikeChoices.size());
 
-            // bike.setItems(bikeChoices);
-            // bike.setVisible(true);
-           ok.setEnabled(true);
+            ok.setEnabled(true);
         });
-//        bike.addValueChangeListener(e -> {
-//            ok.setEnabled(true);
-//            //System.out.println("Bike selected: " + bike.getValue());
-//        });
+
         ok.addClickListener(e -> {
             String bikeId=bikeChoices.get(ThreadLocalRandom.current().nextInt(bikeChoices.size()));
             BikeStatus bikeStatus = rentalClient.getBike(bikeId);

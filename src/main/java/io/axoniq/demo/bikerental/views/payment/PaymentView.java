@@ -4,26 +4,20 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.*;
 import io.axoniq.demo.bikerental.RentalClient;
 import io.axoniq.demo.bikerental.views.MainLayout;
-
-import java.util.List;
-import java.util.Map;
 
 @PageTitle("Payment")
 @Route(value = "payment", layout = MainLayout.class)
 public class PaymentView extends HorizontalLayout implements BeforeEnterObserver {
     private RentalClient rentalClient = RentalClient.get(RentalClient.class);
 
-    //private TextField name;
     private Button pay;
     private QueryParameters queryParameters;
 
 
     public PaymentView() {
-        // name = new TextField("Your name");
         pay = new Button("Pay");
 
         pay.addClickListener(e -> {

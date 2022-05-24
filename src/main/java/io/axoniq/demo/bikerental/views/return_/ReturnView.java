@@ -13,19 +13,13 @@ import io.axoniq.demo.bikerental.views.MainLayout;
 public class ReturnView extends HorizontalLayout implements BeforeEnterObserver {
     private RentalClient rentalClient = RentalClient.get(RentalClient.class);
 
-    //private TextField name;
     private Button returnButton;
     private QueryParameters queryParameters;
 
     public ReturnView() {
-        // list of locations
-
 
         String bikeId = queryParameters.getParameters().get("bikeId").get(0);
 
-
-
-        //name = new TextField("Your name");
         returnButton = new Button("Return bike " + bikeId);
         returnButton.addClickListener(e -> {
             try {
@@ -46,7 +40,6 @@ public class ReturnView extends HorizontalLayout implements BeforeEnterObserver 
 
         add(returnButton);
     }
-
 
     @Override
     public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
